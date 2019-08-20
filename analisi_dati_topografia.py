@@ -10,6 +10,7 @@ import pandas as pd
 import math
 import matplotlib.pyplot as plt
 import datetime
+from as3d_py3 import as3d
 
 # lettura dati topografici
 def ReadXLSMan(filename,path_topo):
@@ -592,7 +593,7 @@ def main():
     #df_rot_topo=RotTopo(df_coord)
     #ConfrontoRot(d_delta_av_comp,df_rot_topo)
     #df_centri_rot=TrovaCentroRot(df_delta_long_trasv,d_delta_av_comp)
-    #as3d(df_coord)  
+    as3d(df_coord)  
 
 if __name__=="__main__":
     main()
