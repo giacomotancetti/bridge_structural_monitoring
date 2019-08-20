@@ -11,6 +11,7 @@ from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy
+from scipy import stats
 
 # read CSV files in folder "download" and store data into DataFrame
 def ReadCSV(path,l_csv):
@@ -48,8 +49,7 @@ def ReadCSV(path,l_csv):
         d_letture[n_centralina]=df_excel
     
     return(d_letture)
-    
-
+     
 # create dictionary ZeroLett with zero measurement    
 def ZeroLett(d_letture):
     d_letture_zero={}
