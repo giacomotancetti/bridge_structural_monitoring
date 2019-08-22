@@ -394,7 +394,7 @@ def GraphDeltaLongTrasv(df_delta_long_trasv):
             fig.canvas.set_window_title(nome_pila+'_'+nome_pto)
             fig.tight_layout()
             fig.set_size_inches((16,9))
-            fname=nome_pila+'_'+nome_pto+'_spost_diff'
+            fname='./grafici_spost_long_trasv/'+nome_pila+'_'+nome_pto+'_long_trasv'
             plt.savefig(fname, dpi=300, facecolor='w', edgecolor='w',
                     orientation='landscape', papertype=None, format=None,
                     transparent=False, bbox_inches='tight', pad_inches=None,
@@ -423,7 +423,7 @@ def GraphRotTors(df_rot_tors):
         fig.canvas.set_window_title(nome_pila)
         fig.tight_layout()
         fig.set_size_inches((16,9))
-        fname=nome_pila+'_rot_tors'
+        fname='./grafici_rot_tors/'+nome_pila+'_rot_tors'
         plt.savefig(fname, dpi=300, facecolor='w', edgecolor='w',
                     orientation='landscape', papertype=None, format=None,
                     transparent=False, bbox_inches='tight', pad_inches=None,
@@ -449,17 +449,16 @@ def GraphSpostDiff(df_spost_long_diff_base,df_spost_long_diff_testa):
         ax1.set_ylim([-0.05,0.05])
         ax1.set_xlabel('time')
         ax1.set_ylabel('displacement [m]')
-        fig.canvas.set_window_title(nome_el)
+        fig.canvas.set_window_title(nome_el+'base')
         fig.tight_layout()
         fig.set_size_inches((16,9))
-        fname=nome_el+'_spost_diff'
+        fname='./grafici_spost_diff/'+nome_el+'_spost_diff_base'
         plt.savefig(fname, dpi=300, facecolor='w', edgecolor='w',
                     orientation='landscape', papertype=None, format=None,
                     transparent=False, bbox_inches='tight', pad_inches=None,
                     frameon=None, metadata=None)
         plt.show()
-        
-    
+          
     l_nomi_el=df_spost_long_diff_testa.index.unique().tolist()
         
     for nome_el in l_nomi_el:
@@ -479,26 +478,70 @@ def GraphSpostDiff(df_spost_long_diff_base,df_spost_long_diff_testa):
         fig.canvas.set_window_title(nome_el+'testa')
         fig.tight_layout()
         fig.set_size_inches((16,9))
-        fname=nome_el+'_spost_diff_testa'
+        fname='./grafici_spost_diff/'+nome_el+'_spost_diff_testa'
         plt.savefig(fname, dpi=300, facecolor='w', edgecolor='w',
                     orientation='landscape', papertype=None, format=None,
                     transparent=False, bbox_inches='tight', pad_inches=None,
                     frameon=None, metadata=None)
         plt.show()
 
+# calcolo spostamenti dovuti alla temperatura
 def SpostLongTemp(df_delta_long_trasv,s_temp):
     # punti testa
     d_pti_testa={'PILA_1':['1693107'],
             'PILA_2':['1693113'],'PILA_3':['1693119'],
             'PILA_4':['1693125'],'PILA_5':['1693246'],
             'PILA_6':['1693238'],'PILA_7':['1693231']}
-    l_date_an=[datetime.date(2019, 3, 1),datetime.date(2019, 6, 19)]
-    d_delta_long_temp={}
+    # punti base
+    d_pti_base={'PILA_1':['1693105','1693204'],'PILA_2':['1693111','1693210'],
+            'PILA_3':['1693117','1693216'],'PILA_4':['1693123','1693222'],
+            'PILA_5':['1693141','1693242'],'PILA_6':['1693137','1693239'],
+            'PILA_7':['1693134','1693233']}
+    
+    # punti giunti
+    d_pti_giunti={'GIUNTO_2':['1693208','1693209'],'GIUNTO_3':['1693214','1693215'],
+            'GIUNTO_4':['1693220','1693221'],'GIUNTO_5':['1693226','1693227'],
+            'GIUNTO_6':['1693245','1693244'],'GIUNTO_7':['1693236','1693235']}
+   
+    l_date_an=[datetime.date(2019, 3, 21),datetime.date(2019, 8, 21)]
+    d_delta_long_temp_testa={}
     for elem in d_pti_testa.keys():
         delta=df_delta_long_trasv[df_delta_long_trasv['Data Misura']==l_date_an[1]].loc[d_pti_testa[elem]]['Delta Long']-df_delta_long_trasv[df_delta_long_trasv['Data Misura']==l_date_an[0]].loc[d_pti_testa[elem]]['Delta Long']
         delta_t=s_temp.loc[l_date_an[1]]-s_temp.loc[l_date_an[0]]
-        d_delta_long_temp[elem]=[delta.values[0],delta_t]
+        d_delta_long_temp_testa[elem]=[delta.values[0],delta_t]
     
+    d_delta_long_temp_base={}
+    for elem in d_pti_base.keys():
+        delta=df_delta_long_trasv[df_delta_long_trasv['Data Misura']==l_date_an[1]].loc[d_pti_base[elem]]['Delta Long'].mean()-df_delta_long_trasv[df_delta_long_trasv['Data Misura']==l_date_an[0]].loc[d_pti_base[elem]]['Delta Long'].mean()
+        delta_t=s_temp.loc[l_date_an[1]]-s_temp.loc[l_date_an[0]]
+        d_delta_long_temp_base[elem]=[delta,delta_t]
+
+    d_delta_long_temp_giunti_top={}
+    for elem in d_pti_giunti.keys():
+        delta_t0=df_delta_long_trasv[df_delta_long_trasv['Data Misura']==l_date_an[0]].loc[d_pti_giunti[elem][1]]['Delta Long']-df_delta_long_trasv[df_delta_long_trasv['Data Misura']==l_date_an[0]].loc[d_pti_giunti[elem][0]]['Delta Long']
+        delta_t1=df_delta_long_trasv[df_delta_long_trasv['Data Misura']==l_date_an[1]].loc[d_pti_giunti[elem][1]]['Delta Long']-df_delta_long_trasv[df_delta_long_trasv['Data Misura']==l_date_an[1]].loc[d_pti_giunti[elem][0]]['Delta Long']
+        delta=delta_t1-delta_t0     # delta>0:allargamento giunto; delta<0 chiusura giunto
+        delta_t=s_temp.loc[l_date_an[1]]-s_temp.loc[l_date_an[0]]
+        d_delta_long_temp_giunti_top[elem]=[delta,delta_t]
+        
+    d_delta_long_temp_giunti_fess={}
+    # trova nomi colonne giunti dir x
+    l_col_giunti=[]
+    l_col_giunti_x=[]
+    for n_centralina in d_delta_av:
+        for column_name in d_delta_av[n_centralina].columns:            
+            if "GIUNTO" in column_name:
+                l_col_giunti.append(column_name)        
+    for column_name in l_col_giunti:            
+        if "X" in column_name:
+            l_col_giunti_x.append(column_name)
+            
+    for n_centralina in d_delta_av:   
+        for column_name in d_delta_av[n_centralina].columns:
+            if column_name in l_col_giunti_x:
+               delta= d_delta_av[n_centralina][column_name].loc[l_date_an[1]]-d_delta_av[n_centralina][column_name].loc[l_date_an[0]]
+               delta_t=s_temp.loc[l_date_an[1]]-s_temp.loc[l_date_an[0]]
+               d_delta_long_temp_giunti_fess[column_name]=[delta,delta_t]
 
 #------------------------------------------------------------------------------
 
@@ -589,11 +632,13 @@ def main():
 
     #GraphRotTors(df_rot_tors)
     #GraphSpostDiff(df_spost_long_diff_base,df_spost_long_diff_testa)
+    #GraphDeltaLongTrasv(df_delta_long_trasv)
+    #as3d(df_coord)
 
     #df_rot_topo=RotTopo(df_coord)
     #ConfrontoRot(d_delta_av_comp,df_rot_topo)
     #df_centri_rot=TrovaCentroRot(df_delta_long_trasv,d_delta_av_comp)
-    as3d(df_coord)  
+      
 
 if __name__=="__main__":
     main()
