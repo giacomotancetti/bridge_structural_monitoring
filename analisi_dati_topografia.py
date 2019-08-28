@@ -366,10 +366,10 @@ def GraphDeltaLongTrasv(df_delta_long_trasv):
     
     # dizionario punti topografici di cui vengono graficati i delta longitudinali e trasversali
     # punti alla base
-    d_pile={'PILA_1':['1693105','1693204'],'PILA_2':['1693111','1693210'],
-            'PILA_3':['1693117','1693216'],'PILA_4':['1693123','1693222'],
-            'PILA_5':['1693141','1693242'],'PILA_6':['1693137','1693239'],
-            'PILA_7':['1693134','1693233']}
+    d_pile={'PILA_1':['1693105','1693106','1693204','1693107'],'PILA_2':['1693111','1693112','1693210','1693113'],
+            'PILA_3':['1693117','1693118','1693216','1693119'],'PILA_4':['1693123','1693124','1693222','1693125'],
+            'PILA_5':['1693141','1693242','1693243','1693246'],'PILA_6':['1693137','1693239','1693240','1693238'],
+            'PILA_7':['1693134','1693233','1693232','1693231']}
     
     l_nomi_pti=df_delta_long_trasv.index.unique().tolist()
 
@@ -485,7 +485,55 @@ def GraphSpostDiff(df_spost_long_diff_base,df_spost_long_diff_testa):
                     frameon=None, metadata=None)
         plt.show()
 
-# calcolo spostamenti dovuti alla temperatura
+# grafico clinometri vs spostamenti testa topografici
+def GraphClinSpostLong(df_delta_long_trasv,d_delta_av):
+    # dizionario punti topografici testa pila
+    d_pile={'PILA_1':['1693107'],'PILA_2':['1693113'],'PILA_3':['1693119'],
+            'PILA_4':['1693125'],'PILA_5':['1693246'],'PILA_6':['1693238'],
+            'PILA_7':['1693231']}
+    
+    for pila in d_pile.keys():
+        for n_centralina in d_delta_av.keys():
+            
+            for n_column in d_delta_av[n_centralina].columns:
+                if pila+'X' in n_column:
+                    t_cl=d_delta_av[n_centralina][n_column].index
+                    data_cl = d_delta_av[n_centralina][n_column].values
+            
+            df_data_topo=df_delta_long_trasv.loc[d_pile[pila][0]]
+            t_topo=df_data_topo['Data Misura']
+            data_topo=df_data_topo['Delta Long'].values
+            
+        fig, ax1 = plt.subplots()
+        color0 = 'tab:blue'
+        ax1.set_xlabel('time')
+        ax1.set_ylabel('rotation [°]')
+        ax1.plot(t_cl, data_cl, color=color0, label=pila,linewidth=0.5)
+        ax1.tick_params(axis='y',labelsize=10,labelrotation=0)
+        ax1.tick_params(axis='x',labelsize=10,labelrotation=-90)
+        ax1.set_ylim([-0.1,0.1])
+            
+        plt.grid(True, which='major',axis='both', linestyle='--',dashes=[10, 10], linewidth=0.5)
+        leg=plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
+                           ncol=2, mode="expand", borderaxespad=0.,fontsize=10)
+            
+        for line in leg.get_lines():
+            line.set_linewidth(2)
+        
+        ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+        color2 = 'tab:orange'
+        ax2.set_ylabel('delta_long [m]') 
+        ax2.plot(t_topo, data_topo, color=color2, label="LONG DISPL", linewidth=0.5,alpha=0.4)
+        ax2.tick_params(axis='y',labelsize=10,labelrotation=0)
+        ax2.set_ylim([-0.1,0.1])
+        
+        fig.tight_layout()
+        fig.set_size_inches((16,9))
+        fname=pila
+        fig.canvas.set_window_title(pila)
+
+# calcolo spostamenti longitudinali dovuti alla temperatura nel periodo in cui 
+# gli inclinometri non hanno fatto registrare spostamenti
 def SpostLongTemp(df_delta_long_trasv,s_temp):
     # punti testa
     d_pti_testa={'PILA_1':['1693107'],
@@ -542,11 +590,10 @@ def SpostLongTemp(df_delta_long_trasv,s_temp):
                delta= d_delta_av[n_centralina][column_name].loc[l_date_an[1]]-d_delta_av[n_centralina][column_name].loc[l_date_an[0]]
                delta_t=s_temp.loc[l_date_an[1]]-s_temp.loc[l_date_an[0]]
                d_delta_long_temp_giunti_fess[column_name]=[delta,delta_t]
-
+           
 #------------------------------------------------------------------------------
 
-def TrovaCentroRot(df_delta_long_trasv,d_delta_av_comp):
-    
+def TrovaCentroRot(df_delta_long_trasv,d_delta_av_comp):    
     # dizionario punti topografici di cui vengono calcolati i delta longitudinali e trasversali
     d_pile={'PILA_1':['1693107'],'PILA_2':['1693113'],'PILA_3':['1693119'],
             'PILA_4':['1693125'],'PILA_5':['1693246'],'PILA_6':['1693238'],
@@ -629,7 +676,7 @@ def main():
     df_rot_tors=AnSpostElev(df_coord,df_delta_long_trasv,df_coord_zero)[0]
     df_spost_long_diff_base=AnSpostElev(df_coord,df_delta_long_trasv,df_coord_zero)[1]
     df_spost_long_diff_testa=AnSpostElev(df_coord,df_delta_long_trasv,df_coord_zero)[2]
-
+    
     #GraphRotTors(df_rot_tors)
     #GraphSpostDiff(df_spost_long_diff_base,df_spost_long_diff_testa)
     #GraphDeltaLongTrasv(df_delta_long_trasv)
@@ -638,7 +685,6 @@ def main():
     #df_rot_topo=RotTopo(df_coord)
     #ConfrontoRot(d_delta_av_comp,df_rot_topo)
     #df_centri_rot=TrovaCentroRot(df_delta_long_trasv,d_delta_av_comp)
-      
 
 if __name__=="__main__":
     main()
