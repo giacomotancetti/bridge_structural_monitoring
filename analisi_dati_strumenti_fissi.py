@@ -265,7 +265,7 @@ def Plot_t_delta_incl(d_delta,d_delta_av,d_delta_comp):
                     
                     fig.tight_layout()
                     fig.set_size_inches((16,9))
-                    fname=l_data_pila[0][:-1]
+                    fname='./grafici_clin/'+l_data_pila[0][:-1]
                     fig.canvas.set_window_title(l_data_pila[0][:-1])
                     
                     #plt.show()
@@ -321,7 +321,7 @@ def Plot_t_delta_incl(d_delta,d_delta_av,d_delta_comp):
                     fig.set_size_inches(16,9)
                     fig.canvas.set_window_title(l_data_spalla[0][:-1])
                     plt.show()
-                    fname=l_data_spalla[0][:-1]
+                    fname='./grafici_clin/'+l_data_spalla[0][:-1]
                     plt.savefig(fname, dpi=300, facecolor='w', edgecolor='w',
                                 orientation='landscape', papertype=None, format=None,
                                 transparent=False, bbox_inches='tight', pad_inches=None,
@@ -391,7 +391,7 @@ def Plot_t_delta_comp_incl(d_delta_comp, d_delta_av_comp):
                     fig.tight_layout()
                     fig.set_size_inches(16,9)
                     fig.canvas.set_window_title(l_data_pila[0][:-1]+"comp")
-                    fname=l_data_pila[0][:-1]+"comp"
+                    fname='./grafici_clin_comp/'+l_data_pila[0][:-1]+"comp"
                     plt.savefig(fname, dpi=300, facecolor='w', edgecolor='w',
                                 orientation='landscape', papertype=None, format=None,
                                 transparent=False, bbox_inches='tight', pad_inches=None,
@@ -440,7 +440,7 @@ def Plot_t_delta_comp_incl(d_delta_comp, d_delta_av_comp):
                     fig.canvas.set_window_title(l_data_spalla[0][:-1]+"comp")
                     fig.tight_layout()
                     fig.set_size_inches(16,9)
-                    fname=l_data_spalla[0][:-1]+"comp"
+                    fname='./grafici_clin_comp/'+l_data_spalla[0][:-1]+"comp"
                     plt.savefig(fname, dpi=300, facecolor='w', edgecolor='w',
                                 orientation='landscape', papertype=None, format=None,
                                 transparent=False, bbox_inches='tight', pad_inches=None,
@@ -563,7 +563,7 @@ def Plot_t_delta_fess(d_delta,d_delta_av,d_delta_comp,d_coeff_Pear):
                     fig.canvas.set_window_title(l_data[0][:-2]+l_data[0][-1])
                     fig.tight_layout()
                     fig.set_size_inches((16,9))
-                    fname=l_data[0][:-2]+l_data[0][-1]
+                    fname='./grafici_fess/'+l_data[0][:-2]+l_data[0][-1]
                     plt.savefig(fname, dpi=300, facecolor='w', edgecolor='w',
                                 orientation='landscape', papertype=None, format=None,
                                 transparent=False, bbox_inches='tight', pad_inches=None,
@@ -608,7 +608,7 @@ def Plot_t_delta_fess(d_delta,d_delta_av,d_delta_comp,d_coeff_Pear):
                     fig.canvas.set_window_title(n_data)
                     fig.tight_layout()
                     fig.set_size_inches((16,9))
-                    fname=n_data
+                    fname='./grafici_fess/'+n_data
                     plt.savefig(fname, dpi=300, facecolor='w', edgecolor='w',
                                 orientation='landscape', papertype=None, format=None,
                                 transparent=False, bbox_inches='tight', pad_inches=None,
