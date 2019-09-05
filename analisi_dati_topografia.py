@@ -438,47 +438,24 @@ def GraphSpostDiff(df_spost_long_diff_base,df_spost_long_diff_testa):
     for nome_el in l_nomi_el:
         
         t=df_spost_long_diff_base.loc[nome_el]['Data Misura']
-        spost_diff=df_spost_long_diff_base.loc[nome_el]['Delta Diff']
+        spost_diff_base=df_spost_long_diff_base.loc[nome_el]['Delta Diff']
+        spost_diff_testa=df_spost_long_diff_testa.loc[nome_el]['Delta Diff']
         
         color1 = 'tab:blue'
+        color2 = 'tab:orange'
         fig, ax1 = plt.subplots()
-        ax1.plot(t,spost_diff,color=color1, label=nome_el,linewidth=0.8)
+        ax1.plot(t,spost_diff_base,color=color1, label=nome_el+'base',linewidth=0.8)
+        ax1.plot(t,spost_diff_testa,color=color2, label=nome_el+'testa',linewidth=0.8)
         plt.grid(True, which='major', linestyle='--',dashes=[10, 10], linewidth=0.5)
         plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
                    ncol=2, mode="expand", borderaxespad=0.)
         ax1.set_ylim([-0.05,0.05])
         ax1.set_xlabel('time')
         ax1.set_ylabel('displacement [m]')
-        fig.canvas.set_window_title(nome_el+'base')
+        fig.canvas.set_window_title(nome_el)
         fig.tight_layout()
         fig.set_size_inches((16,9))
-        fname='./grafici_spost_diff/'+nome_el+'_spost_diff_base'
-        plt.savefig(fname, dpi=300, facecolor='w', edgecolor='w',
-                    orientation='landscape', papertype=None, format=None,
-                    transparent=False, bbox_inches='tight', pad_inches=None,
-                    frameon=None, metadata=None)
-        plt.show()
-          
-    l_nomi_el=df_spost_long_diff_testa.index.unique().tolist()
-        
-    for nome_el in l_nomi_el:
-        
-        t=df_spost_long_diff_testa.loc[nome_el]['Data Misura']
-        spost_diff=df_spost_long_diff_testa.loc[nome_el]['Delta Diff']
-        
-        color1 = 'tab:blue'
-        fig, ax1 = plt.subplots()
-        ax1.plot(t,spost_diff,color=color1, label=nome_el+'_testa',linewidth=0.8)
-        plt.grid(True, which='major', linestyle='--',dashes=[10, 10], linewidth=0.5)
-        plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-                   ncol=2, mode="expand", borderaxespad=0.)
-        ax1.set_ylim([-0.05,0.05])
-        ax1.set_xlabel('time')
-        ax1.set_ylabel('displacement [m]')
-        fig.canvas.set_window_title(nome_el+'testa')
-        fig.tight_layout()
-        fig.set_size_inches((16,9))
-        fname='./grafici_spost_diff/'+nome_el+'_spost_diff_testa'
+        fname='./grafici_spost_diff/'+nome_el
         plt.savefig(fname, dpi=300, facecolor='w', edgecolor='w',
                     orientation='landscape', papertype=None, format=None,
                     transparent=False, bbox_inches='tight', pad_inches=None,
